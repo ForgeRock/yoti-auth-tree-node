@@ -85,9 +85,10 @@ public class YotiDynamicScenarioNodeTest {
 
         ScriptTextOutputCallback result = (ScriptTextOutputCallback) testObj.createYotiLoginCallback();
 
-        assertTrue(result.getMessage().contains("someAppId"));
+        assertTrue(result.getMessage().contains("someSdkId"));
         assertTrue(result.getMessage().contains("someUrl"));
-        assertTrue(result.getMessage().contains("https://sdk.yoti.com/someScriptPath"));
+        assertTrue(result.getMessage().contains("DYNAMIC"));
+        assertTrue(result.getMessage().contains("https://yoti.com/someScriptPath"));
     }
 
     private static class TestConfig implements YotiDynamicScenarioNode.Config {
@@ -99,12 +100,7 @@ public class YotiDynamicScenarioNodeTest {
 
         @Override
         public String sdkId() {
-            return null;
-        }
-
-        @Override
-        public String appId() {
-            return "someAppId";
+            return "someSdkId";
         }
 
         @Override
