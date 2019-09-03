@@ -1,15 +1,19 @@
 package com.yoti.forgerock.auth;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static com.yoti.forgerock.auth.matcher.WantedAttributeMatcher.forName;
+import static org.hamcrest.CoreMatchers.hasItems;
+import static org.junit.Assert.*;
 import static org.mockito.Answers.RETURNS_SELF;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.sun.identity.authentication.callbacks.ScriptTextOutputCallback;
 import com.yoti.api.client.FileKeyPairSource;
 import com.yoti.api.client.YotiClient;
 import com.yoti.api.client.YotiClientBuilder;
 
-import com.sun.identity.authentication.spi.RedirectCallback;
+import com.yoti.api.client.shareurl.DynamicScenario;
+import com.yoti.api.client.shareurl.policy.DynamicPolicy;
 import org.forgerock.openam.auth.node.api.Action;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,12 +50,13 @@ public class YotiStaticScenarioNodeTest {
     }
 
     @Test
-    public void createYotiLoginCallback() {
-        RedirectCallback result = (RedirectCallback) testObj.createYotiLoginCallback();
+    public void createYotiLoginCallback_shouldSubstitueValuesIntoTheScript() throws Exception {
+        ScriptTextOutputCallback result = (ScriptTextOutputCallback) testObj.createYotiLoginCallback();
 
-        assertEquals("GET", result.getMethod());
-        assertEquals("someRedirectUri" + "someAppId", result.getRedirectUrl());
-        assertTrue(result.getTrackingCookie());
+        assertTrue(result.getMessage().contains("someSdkId"));
+        assertTrue(result.getMessage().contains("someScenarioId"));
+        assertTrue(result.getMessage().contains("STATIC"));
+        assertTrue(result.getMessage().contains("https://yoti.com/someScriptPath"));
     }
 
     private static class TestConfig implements YotiStaticScenarioNode.Config {
@@ -62,18 +67,18 @@ public class YotiStaticScenarioNodeTest {
         }
 
         @Override
-        public String appId() {
-            return "someAppId";
+        public String scenarioId() {
+            return "someScenarioId";
         }
 
         @Override
         public String sdkId() {
-            return null;
+            return "someSdkId";
         }
 
         @Override
-        public String redirectUri() {
-            return "someRedirectUri";
+        public String yotiScriptPath() {
+            return "/someScriptPath";
         }
 
     }

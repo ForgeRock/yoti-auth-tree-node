@@ -58,16 +58,6 @@ public class YotiDynamicScenarioNode extends AbstractYotiAuthNode<YotiDynamicSce
         }
 
         /**
-         * Base URI for redirecting to Yoti
-         *
-         * @return Base URI for redirecting to Yoti
-         */
-        @Attribute(order = 500, validators = { RequiredValueValidator.class })
-        default String yotiScriptPath() {
-            return "/clients/browser.2.3.0.js";
-        }
-
-        /**
          * Attributes to request in the share
          *
          * @return List of attributes to request in the share
@@ -100,7 +90,8 @@ public class YotiDynamicScenarioNode extends AbstractYotiAuthNode<YotiDynamicSce
     }
 
     private static final String SCRIPT_TEMPLATE_LOCATION = "com/yoti/forgerock/auth/integrateYoti.js";
-    private static final String YOTI_SCRIPT_HOST = "https://sdk.yoti.com";
+    private static final String YOTI_SCRIPT_HOST = "https://yoti.com";
+    private static final String YOTI_SHARE_TYPE = "DYNAMIC";
 
     private final String scriptTemplate;
 
@@ -124,8 +115,9 @@ public class YotiDynamicScenarioNode extends AbstractYotiAuthNode<YotiDynamicSce
     @Override
     protected Callback createYotiLoginCallback() throws NodeProcessException {
         Map<String, String> valuesMap = new HashMap<>();
-        valuesMap.put("appId", config.appId());
-        valuesMap.put("url", createRedirectUrl());
+        valuesMap.put("clientSdkId", config.sdkId());
+        valuesMap.put("shareUrl", createRedirectUrl());
+        valuesMap.put("yotiShareType", YOTI_SHARE_TYPE);
         valuesMap.put("yotiScriptSource", YOTI_SCRIPT_HOST + config.yotiScriptPath());
 
         String script = new StrSubstitutor(valuesMap).replace(scriptTemplate);

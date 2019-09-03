@@ -68,14 +68,6 @@ public abstract class AbstractYotiAuthNode<T extends AbstractYotiAuthNode.Config
         @Attribute(order = 200, validators = { RequiredValueValidator.class })
         String sdkId();
 
-        /**
-         * the app id.
-         *
-         * @return the app id
-         */
-        @Attribute(order = 300, validators = { RequiredValueValidator.class })
-        String appId();
-
         @Attribute(order = 800, validators = { RequiredValueValidator.class })
         default Map<String, String> attributeMappings() {
             final Map<String, String> defaultMappings = new HashMap<>();
@@ -83,8 +75,18 @@ public abstract class AbstractYotiAuthNode<T extends AbstractYotiAuthNode.Config
             defaultMappings.put(AttributeConstants.HumanProfileAttributes.FAMILY_NAME, "sn");
             defaultMappings.put(AttributeConstants.HumanProfileAttributes.GIVEN_NAMES, "givenName");
             defaultMappings.put(AttributeConstants.HumanProfileAttributes.EMAIL_ADDRESS, "mail");
-            defaultMappings.put(AttributeConstants.HumanProfileAttributes.PHONE_NUMBER, "phoneNumber");
+            defaultMappings.put(AttributeConstants.HumanProfileAttributes.PHONE_NUMBER, "telephoneNumber");
             return defaultMappings;
+        }
+
+        /**
+         * Script path to use for the QR Modal
+         *
+         * @return the script path to use for the QR Modal
+         */
+        @Attribute(order = 500, validators = { RequiredValueValidator.class })
+        default String yotiScriptPath() {
+            return "/share/client/";
         }
 
         /**

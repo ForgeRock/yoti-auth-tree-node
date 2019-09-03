@@ -207,11 +207,6 @@ public class AbstractYotiAuthNodeTest {
             }
 
             @Override
-            public String appId() {
-                return null;
-            }
-
-            @Override
             public boolean saveUserAttributesToSession() {
                 return saveAttributes;
             }
